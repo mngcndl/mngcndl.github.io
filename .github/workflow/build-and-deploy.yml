@@ -1,0 +1,32 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Install dependencies
+        run: npm install
+
+      - name: Linting and Formatting Check
+        run: |
+          npm run lint
+          npm run format:check 
+
+      - name: Build
+        run: npm run build 
+      
+      - name: Deploy to GitHub Pages
+        if: success()
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          npm run deploy
